@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+# fail fast
+set -e
+
+export BUILDPACK_STDLIB_URL="https://lang-common.s3.amazonaws.com/buildpack-stdlib/v7/stdlib.sh"
+
+BP_DIR=$(cd $(dirname $0)/..; pwd) # absolute path
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+source <(curl -s --retry 3 -L $BUILDPACK_STDLIB_URL)
+
+export_env $ENV_DIR "." "JAVA_OPTS|JAVA_TOOL_OPTIONS"
+
+registry_version=${JHIPSTER_REGISTRY_VERSION:-"4.0.4"}
+war_url="${JHIPSTER_REGISTRY_WAR_URL:-"https://github.com/jhipster/jhipster-registry/releases/download/v${JHIPSTER_REGISTRY_VERSION}/jhipster-registry-${JHIPSTER_REGISTRY_VERSION}.war"}"
+
+cd $BUILD_DIR
+mkdir -p target
+curl -sfL -o target/jhipster-registry.war "$war_url"
