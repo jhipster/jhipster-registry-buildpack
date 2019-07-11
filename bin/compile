@@ -15,9 +15,12 @@ source <(curl -s --retry 3 -L $BUILDPACK_STDLIB_URL)
 
 export_env $ENV_DIR "." "JAVA_OPTS|JAVA_TOOL_OPTIONS"
 
-registry_version=${JHIPSTER_REGISTRY_VERSION:-"4.0.6"}
-war_url="${JHIPSTER_REGISTRY_WAR_URL:-"https://github.com/jhipster/jhipster-registry/releases/download/v${JHIPSTER_REGISTRY_VERSION}/jhipster-registry-${JHIPSTER_REGISTRY_VERSION}.war"}"
+registry_version=${JHIPSTER_REGISTRY_VERSION:-"5.0.2"}
+jar_url_base="${JHIPSTER_REGISTRY_WAR_URL:-"https://github.com/jhipster/jhipster-registry/releases/download/v${JHIPSTER_REGISTRY_VERSION}/jhipster-registry-${JHIPSTER_REGISTRY_VERSION}"}"
 
 cd $BUILD_DIR
 mkdir -p target
-curl -sfL -o target/jhipster-registry.war "$war_url"
+
+if ! curl -sfL -o target/jhipster-registry.jar "${jar_url_base}.jar"; then
+  curl -sfL -o target/jhipster-registry.jar "${jar_url_base}.war"
+fi
