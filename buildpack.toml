@@ -1,0 +1,10 @@
+api = "0.2"
+
+[buildpack]
+id = "jhipster/registry"
+
+version = "0.1"
+name = "JHipster Registry"
+
+[[stacks]]
+id = "heroku-18"
