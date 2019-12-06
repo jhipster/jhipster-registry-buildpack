@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# fail hard
+set -o pipefail
+# fail harder
+set -eu
+
+bpDir=$(cd $(dirname $0)/..; pwd) # absolute path
+layersDir="${1:?}"
+platformDir="${2:?}"
+
+# create a shim cache layer
+cacheDir="${layersDir}/registry"
+mkdir -p "${cacheDir}"
+echo "cache = true" > ${layersDir}/registry.toml
+
+"${bpDir}/bin/compile" "$(pwd)" "${cacheDir}" "${platformDir}/env"
